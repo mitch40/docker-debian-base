@@ -1,0 +1,20 @@
+#!/bin/bash
+
+VERT="\033[32m"
+ROUGE="\033[31m"
+NORM="\033[0m"
+
+DIR_CONF="/opt/entrypoint.d"
+
+NBFILES=`ls $DIR_CONF/*.conf 2>/dev/null | wc -l || echo 0`
+if [ $NBFILES -eq 0 ];then
+	echo -e "$ROUGE Aucun fichier de configuration à lancer dans /opt/entrypoint.d/ $NORM"
+else
+	for fic in `ls $DIR_CONF/*.conf`;do
+        	echo -e "$VERT Exécution de $fic $NORM"
+	        /bin/bash $fic
+	done
+fi
+
+echo -e "$VERT Lancement de supervisor $NORM"
+/usr/bin/supervisord -n
