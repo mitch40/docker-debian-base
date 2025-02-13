@@ -1,0 +1,32 @@
+alias bulk_download {
+    if ($argc < 2) {
+        println("Usage: bulk_download <beacon> <fichier_liste>");
+        return;
+    }
+
+    local('$bid $file_list $files $file');
+
+    # ID du beacon
+    $bid = $1;
+
+    # Fichier contenant la liste des fichiers à télécharger
+    $file_list = $2;
+
+    # Vérifier si le fichier existe
+    if (!isfile($file_list)) {
+        println("Erreur: Le fichier $file_list n'existe pas.");
+        return;
+    }
+
+    # Lire la liste des fichiers
+    $files = readf($file_list);
+
+    # Télécharger chaque fichier
+    foreach $file (split("\n", $files)) {
+        $file = trim($file);
+        if ($file) {
+            println("Téléchargement de: $file");
+            bdownload($bid, $file);
+        }
+    }
+}
